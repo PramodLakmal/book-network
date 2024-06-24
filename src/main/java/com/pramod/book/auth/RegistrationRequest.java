@@ -1,8 +1,8 @@
 package com.pramod.book.auth;
 
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,18 +13,19 @@ import lombok.Setter;
 @Builder
 public class RegistrationRequest {
 
-    @NotEmpty(message = "Password is required")
-    @NotBlank(message = "Password is required")
-    @Size(min = 8, message = "Password must be at least 8 characters")
-    private String password;
-    @NotEmpty(message = "Email is required")
-    @NotBlank(message = "Email is required")
-    @Email(message = "Email is invalid")
+
+    @NotEmpty(message = "Firstname is mandatory")
+    @NotNull(message = "Firstname is mandatory")
+    private String firstname;
+    @NotEmpty(message = "Lastname is mandatory")
+    @NotNull(message = "Lastname is mandatory")
+    private String lastname;
+    @Email(message = "Email is not well formatted")
+    @NotEmpty(message = "Email is mandatory")
+    @NotNull(message = "Email is mandatory")
     private String email;
-    @NotEmpty(message = "First name is required")
-    @NotBlank(message = "First name is required")
-    private String firstName;
-    @NotEmpty(message = "Last name is required")
-    @NotBlank(message = "Last name is required")
-    private String lastName;
+    @NotEmpty(message = "Password is mandatory")
+    @NotNull(message = "Password is mandatory")
+    @Size(min = 8, message = "Password should be 8 characters long minimum")
+    private String password;
 }
