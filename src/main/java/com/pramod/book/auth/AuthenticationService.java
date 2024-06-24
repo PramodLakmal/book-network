@@ -5,8 +5,10 @@ import com.pramod.book.user.Token;
 import com.pramod.book.user.TokenRepository;
 import com.pramod.book.user.User;
 import com.pramod.book.user.UserRepository;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +24,12 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final TokenRepository tokenRepository;
-    public void register( RegistrationRequest request) {
+    private final EmailService emailService;
+
+    @Value("${application.mailing.frontend.activation-url}")
+    private String activationUrl;
+
+    public void register( RegistrationRequest request) throws MessagingException {
         var userRole = roleRepository.findByName("USER")
                 .orElseThrow(() -> new IllegalStateException("Role USER was not initialized"));
         var user = User.builder()
@@ -38,8 +45,16 @@ public class AuthenticationService {
         sendValidationEmail(user);
     }
 
-    private void sendValidationEmail(User user) {
+    private void sendValidationEmail(User user) throws MessagingException {
         var newToken = generateAndSaveActivationToken(user);
+        emailService.sendEmail(
+                user.getEmail(),
+                user.fullName(),
+                EmailTemplateName.ACTIVATE_ACCOUNT,
+                activationUrl,
+                newToken,
+                "Activate your account"
+        );
     }
 
     private String generateAndSaveActivationToken(User user) {
