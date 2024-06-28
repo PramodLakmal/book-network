@@ -1,5 +1,6 @@
 package com.pramod.book.feedback;
 
+import com.pramod.book.book.Book;
 import com.pramod.book.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -25,5 +26,9 @@ public class Feedback extends BaseEntity {
 
     private Double note;
     private String comment;
+
+    @ManyToOne
+    @JoinColumn(name = "book_id")
+    private Book book;
 
 }
