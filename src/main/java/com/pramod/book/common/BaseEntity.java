@@ -1,6 +1,5 @@
-package com.pramod.book.feedback;
+package com.pramod.book.common;
 
-import com.pramod.book.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,10 +19,23 @@ import java.time.LocalDateTime;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-public class Feedback extends BaseEntity {
+@MappedSuperclass
+@EntityListeners(AuditingEntityListener.class)
+public class BaseEntity {
 
-    private Double note;
-    private String comment;
-
+    @Id
+    @GeneratedValue
+    private Integer id;
+    @CreatedDate
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdDate;
+    @LastModifiedDate
+    @Column(insertable = false)
+    private LocalDateTime lastModifiedDate;
+    @CreatedBy
+    @Column(nullable = false, updatable = false)
+    private Integer createdBy;
+    @LastModifiedBy
+    @Column(insertable = false)
+    private Integer lastModifiedBy;
 }
