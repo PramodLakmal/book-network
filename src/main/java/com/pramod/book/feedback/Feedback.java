@@ -1,4 +1,4 @@
-package com.pramod.book.book;
+package com.pramod.book.feedback;
 
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedBy;
@@ -11,18 +11,13 @@ import java.time.LocalDateTime;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-public class Book {
+public class Feedback {
 
     @Id
     @GeneratedValue
     private Integer id;
-    private String title;
-    private String authorName;
-    private String isbn;
-    private String synopsis;
-    private String bookCover;
-    private boolean archived;
-    private boolean shareable;
+    private Double note;
+    private String comment;
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdDate;
@@ -35,5 +30,4 @@ public class Book {
     @LastModifiedBy
     @Column(insertable = false)
     private Integer lastModifiedBy;
-
 }
