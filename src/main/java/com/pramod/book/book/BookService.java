@@ -1,6 +1,7 @@
 package com.pramod.book.book;
 
 import com.pramod.book.common.PageResponse;
+import com.pramod.book.exception.OperationNotPermittedException;
 import com.pramod.book.history.BookTransactionHistory;
 import com.pramod.book.history.BookTransactionHistoryRepository;
 import com.pramod.book.user.User;
@@ -14,10 +15,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Stream;
+import java.util.Objects;
 
 import static com.pramod.book.book.BookSpecification.withOwnerId;
-import static java.util.stream.Collectors.toList;
 
 @Service
 @RequiredArgsConstructor
@@ -111,5 +111,17 @@ public class BookService {
                 allBorrowedBooks.isLast(),
                 allBorrowedBooks.isFirst()
         );
+    }
+
+    public Integer updateShareableStatus(Integer bookId, Authentication connectedUser) {
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new EntityNotFoundException("No book found with id " + bookId));
+        User user = ((User) connectedUser.getPrincipal());
+        if (!Objects.equals(book.getOwner().getBooks(), user.getBooks())) {
+            throw new OperationNotPermittedException("You are not allowed to update this book");
+        }
+        book.setShareable(!book.isShareable());
+        bookRepository.save(book);
+        return book.getId();
     }
 }
