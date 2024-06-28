@@ -51,5 +51,5 @@ public class Book extends BaseEntity {
                 .orElse(0.0);
         double roundedRate = Math.round(rate * 100.0) / 100.0;
         return roundedRate;
-
+    }
 }
