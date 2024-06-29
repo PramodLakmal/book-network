@@ -1,5 +1,6 @@
 package com.pramod.book.book;
 
+import com.pramod.book.file.FileUtils;
 import com.pramod.book.history.BookTransactionHistory;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,7 @@ public class BookMapper {
                 .rate(book.getRate())
                 .shareable(book.isShareable())
                 .archived(book.isArchived())
+                .cover(FileUtils.readFileFromLocation(book.getBookCover()))
                 .build();
     }
 
